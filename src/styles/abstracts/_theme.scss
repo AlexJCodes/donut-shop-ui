@@ -1,0 +1,28 @@
+/* (DARK MODE) (^.^)*/
+:root {
+  color-scheme: dark;
+
+  /* Base */
+  --bg: #0b0c10;
+  --ink: rgba(255, 255, 255, 0.92);
+  --muted: rgba(255, 255, 255, 0.65);
+
+  /* Brand */
+  --blue-1: #79a9dd;
+  --blue-2: #6f9fd6;
+
+  /* Surfaces / cards */
+  --card: rgba(255, 255, 255, 0.06);
+  --card-solid: rgba(255, 255, 255, 0.10);
+  --stroke: rgba(255, 255, 255, 0.14);
+
+  /* CTA */
+  --cta: #6da0d8;
+  --cta-text: rgba(0, 0, 0, 0.92);
+
+  /* Shadow */
+  --shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+
+  /* Focus */
+  --focus: 0 0 0 3px rgba(121, 169, 221, 0.35);
+}

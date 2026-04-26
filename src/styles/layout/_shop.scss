@@ -1,0 +1,61 @@
+@use "../abstracts/variables" as v;
+
+/* Shop layout color styles */
+.shop {
+    background: linear-gradient(180deg, v.$blue-1, v.$blue-2);
+}
+
+.shop__header {
+    display: grid;
+    gap: v.$space-4;
+    text-align: center;
+    margin-bottom: v.$space-6;
+}
+
+.shop__title {
+    margin: 0;
+}
+
+/* Making sure controls are stacked, mobile first */
+.controls {
+    display: grid;
+    gap: v.$space-4;
+}
+
+/* Filter pills positioning */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: v.$space-3;
+    justify-content: center;
+}
+
+/* Sort label and select positioning */
+.sort {
+    display: flex;
+    gap: v.$space-3;
+    align-items: center;
+    justify-content: center;
+}
+
+.sort-label {
+    opacity: 0.9;
+}
+
+/* Tablet and up - filter left and sort right - !!commented out for now!!
+@media (min-width: 800px) {
+    .controls {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+    }
+
+    .filters {
+        justify-content: flex-start;
+    }
+
+    .sort {
+        justify-content: flex-end;
+    }
+    
+}
+    */

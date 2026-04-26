@@ -1,0 +1,18 @@
+@use "../abstracts/variables" as v;
+
+body {
+    background: v.$bg;
+    color: v.$ink;
+}
+
+/* Container responsive max-width on big screens */
+.container {
+    width: min(v.$max-width, 100% - 2rem);
+    margin-inline: auto;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+[hidden] { display: none !important; }

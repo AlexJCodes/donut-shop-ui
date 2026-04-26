@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- Google Fonts -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Jua&display=swap" rel="stylesheet" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>G's Donut Shop</title>
+  </head>
+
+  <body>
+    <!--Skip Link for keyboard users-->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!---------------------------------------------->
+    <!--------------------HEADER-------------------->
+    <!---------------------------------------------->
+
+    <!--=============HEADER / NAVBAR==============-->
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <a href="#main" class="container brand-link">
+            <h1 class="site-title">G'S DONUT SHOP</h1>
+          </a>
+        </div>
+
+        <!-----------------NAVIGATION----------------->
+        <nav class="main-nav" aria-label="Huvudnavigation">
+          <ul class="nav-list">
+            <li>
+              <a href="#menu" class="nav-link">Menu</a>
+            </li>
+            <li>
+              <a href="#contact" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-cart">
+              <button type="button" class="cart-btn" aria-label="Open cart">
+                <img class="cart-icon" src="./assets/shopping_cart_standard.svg" alt="" aria-hidden="true" />
+                <span class="cart-badge" aria-hidden="true">0</span>
+              </button>
+            </li>
+            <!--Aria-live for for screen readers to live update,
+            polite = wait until user is done with cart-->
+            <li id="cartLive" class="visually-hidden" aria-live="polite"></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!--=============HERO-SECTION===============-->
+    <section class="hero" aria-label="Introduktion">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <img
+            class="hero-logo"
+            src="./assets/g-logo.png"
+            alt="An animated logo showing Gottfrid holding a donut and a description of est 1876."
+            loading="eager"
+          />
+
+          <h2 class="hero-title">A HOLE LOT OF HAPPINES</h2>
+          <p class="hero-text">DONUTS SO GOOD, THEY DISAPPEAR FASTER THAN YOUR WORRIES.</p>
+
+          <a class="hero-cta" href="#menu">VIEW MENU</a>
+        </div>
+      </div>
+    </section>
+
+    <!-------------------------------------------->
+    <!--------------------MAIN-------------------->
+    <!-------------------------------------------->
+
+    <main id="main">
+      <!--=============SHOP HEADER==============-->
+      <section id="menu" class="shop" aria-label="Menu">
+        <div class="container">
+          <header class="shop__header">
+            <h2 class="shop__title">PICK YOUR DONUT</h2>
+
+            <!--============= FILTER =============-->
+            <div class="controls" role="region">
+              <nav class="filters" aria-label="Filter donuts based on category">
+                <h3 class="visually-hidden">Filter</h3>
+
+                <!-- Buttons for filtering -->
+                <button type="button" class="filter-btn" data-category="Filled">FILLED DONUTS</button>
+                <button type="button" class="filter-btn" data-category="Topped">TOPPED DONUTS</button>
+                <button type="button" class="filter-btn" data-category="Savory">SAVORY DONUTS</button>
+
+                <!-- Reset -->
+                <button type="button" class="filter-btn filter-btn--reset" data-category="All">SHOW ALL</button>
+              </nav>
+
+              <!--============= SORT =============-->
+              <div class="sort">
+                <label for="sortSelect" class="sort-label">SORT BY</label>
+                <select id="sortSelect" name="sort">
+                  <option value="default">Standard</option>
+                  <option value="name-asc">Name (A-Z)</option>
+                  <option value="price-asc">Price (Low to High)</option>
+                  <option value="rating-desc">Rating (High to Low)</option>
+                  <option value="category-desc">Category (A to Z)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Status for screen readers -->
+            <p id="resultStatus" class="status visually-hidden" aria-live="polite"></p>
+          </header>
+
+          <!--================MENU==================-->
+          <section id="productGrid" class="product-grid" aria-label="Product list"></section>
+        </div>
+      </section>
+    </main>
+
+    <!---------------------------------------------->
+    <!--------------------FOOTER-------------------->
+    <!---------------------------------------------->
+
+    <!---- COMMENT OUT <footer>footer</footer> ---->
+    <script type="module" src="/src/main.js"></script>
+
+    <!--=========== TEMPLATE FOR JS =============-->
+    <template id="productCardTemplate">
+      <article class="product-card">
+        <img class="product-card__img" src="" alt="" loading="lazy" />
+
+        <div class="product-card__body">
+          <div class="product-card__title-row">
+            <h3 class="product-card__name"></h3>
+            <span class="product-card__price"></span>
+          </div>
+
+          <p class="product-card__meta">
+            <span class="product-card__rating"></span>
+          </p>
+
+          <p class="product-card__category"></p>
+
+          <!-- Buttons for total number of donuts -->
+          <div class="product-card__qty" aria-label="Change total">
+            <!-- Decrease -->
+            <button type="button" class="qty-btn decrease" aria-label="Decrease total">-</button>
+
+            <!-- Input -->
+            <input type="number" class="amount" min="0" step="1" value="0" aria-label="Amount" />
+
+            <!-- Increase -->
+            <button type="button" class="qty-btn increase" aria-label="Increase total">+</button>
+
+            <!-- ADD button -->
+            <button type="button" class="buy add-btn" aria-label="Add to cart">
+              <img class="add-btn__icon" src="./assets/shopping_basket.svg" alt="" aria-hidden="true" />
+              <span class="add-btn__text">ADD</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <!--=========== CART DIALOG =============-->
+
+    <dialog id="cartDialog" class="cart-dialog" aria-label="Shopping cart">
+      <div class="cart-dialog__panel">
+        <header class="cart-dialog__header">
+          <h2 class="cart-dialog__title">YOUR CART.. WE DONUT JUDGE</h2>
+          <p class="cart-dialog__subtitle">Seriously. Add more if you want.</p>
+
+          <!-- Close button-->
+          <button type="button" class="cart-dialog__close" aria-label="Close cart">X</button>
+        </header>
+
+        <section id="cartView">
+          <!-- Summary -->
+          <div class="cart-dialog__summary">
+            <p>
+              Subtotal:
+              <strong id="cartSubtotal">0.00 $</strong>
+            </p>
+
+            <p class="summary-line">
+              <span class="summary-label">Discount:</span>
+              <strong id="cartDiscount">0.00 $</strong>
+              <span id="discountInfo" class="cart-dialog__info" aria-live="polite"></span>
+            </p>
+
+            <p>
+              Shipping:
+              <strong id="cartShipping">2.50 $</strong>
+            </p>
+
+            <p class="cart-dialog__total">
+              Total:
+              <strong id="cartTotal" aria-live="polite">0.00 $</strong>
+            </p>
+            <p id="shippingInfo" class="cart-dialog__info" aria-live="polite"></p>
+            <p id="cartStatus" class="cart-dialog__info" aria-live="polite"></p>
+          </div>
+
+          <!-- Product rendering from JS -->
+          <section id="cart" class="cart-dialog__list" aria-label="Cart items"></section>
+
+          <footer class="cart-dialog__footer">
+            <button type="button" id="clearCartBtn" class="cart-dialog__clear">EMPTY THE STASH</button>
+            <button type="button" class="cart-dialog__checkout" id="checkoutBtn">CHECKOUT</button>
+          </footer>
+        </section>
+
+        <!-- Form for checkout products -->
+        <section class="checkout-is-collapsed" id="checkoutView" aria-labelledby="checkoutTitle">
+          <header class="checkout__header">
+            <h2 id="checkoutTitle" class="checkout__title">Checkout</h2>
+            <p class="checkout__subtitle">Fill in your details. Fields marked * are required</p>
+          </header>
+
+          <!-- Novalidate for validating in JS instead of browser (regex) -->
+          <form id="checkoutForm" class="checkout-form" novalidate>
+            <!--=========== NAME =============-->
+            <fieldset class="checkout-form__group">
+              <legend class="checkout-form__legend">Customer</legend>
+
+              <label class="field" data-field="firstName">
+                <span class="field__label">First name *</span>
+
+                <!-- If not filled in properly -->
+                <span class="field__error" aria-live="polite" hidden></span>
+
+                <input
+                  class="field__input"
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  autocomplete="given-name"
+                  required
+                  minlength="2"
+                />
+              </label>
+
+              <label class="field" data-field="lastName">
+                <span class="field__label">Last name *</span>
+                <span class="field__error" aria-live="polite"></span>
+
+                <input
+                  class="field__input"
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  autocomplete="family-name"
+                  required
+                  minlength="2"
+                />
+              </label>
+            </fieldset>
+
+            <!--=========== ADRESS =============-->
+            <fieldset class="checkout-form__group">
+              <legend class="checkout-form__legend">Adress</legend>
+
+              <label class="field" data-field="street">
+                <span class="field__label">Street *</span>
+                <span class="field__error" aria-live="polite" hidden></span>
+
+                <input
+                  class="field__input"
+                  type="text"
+                  id="street"
+                  name="street"
+                  autocomplete="address-line1"
+                  required
+                />
+              </label>
+
+              <div class="checkout-form__row">
+                <label class="field" data-field="postal">
+                  <span class="field__label">Postal code *</span>
+                  <span class="field__error" aria-live="polite" hidden></span>
+
+                  <input
+                    class="field__input"
+                    type="text"
+                    id="postal"
+                    name="postal"
+                    inputmode="numeric"
+                    autocomplete="postal-code"
+                    required
+                  />
+                </label>
+
+                <label class="field" data-field="city">
+                  <span class="field__label">City *</span>
+                  <span class="field__error" aria-live="polite" hidden></span>
+
+                  <input
+                    class="field__input"
+                    type="text"
+                    id="city"
+                    name="city"
+                    autocomplete="address-level2"
+                    required
+                  />
+                </label>
+              </div>
+
+              <label class="field" data-field="doorCode">
+                <span class="field__label">Door code (optional)</span>
+
+                <input class="field__input" type="text" id="doorCode" name="doorCode" autocomplete="off" />
+              </label>
+            </fieldset>
+
+            <!--=========== CONTACT =============-->
+            <fieldset class="checkout-form__group">
+              <legend class="checkout-form__legend">Contact</legend>
+
+              <label class="field" data-field="phone">
+                <span class="field__label">Mobile *</span>
+                <span class="field__error" aria-live="polite" hidden></span>
+
+                <input
+                  class="field__input"
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  required
+                />
+              </label>
+
+              <label class="field" data-field="email">
+                <span class="field__label">Email *</span>
+                <span class="field__error" aria-live="polite" hidden></span>
+
+                <input class="field__input" type="email" id="email" name="email" autocomplete="email" required />
+              </label>
+            </fieldset>
+
+            <!--=========== PAYMENT =============-->
+            <!------------- Invoice --------------->
+            <fieldset class="checkout-form__group">
+              <legend class="checkout-form__legend">Payment</legend>
+
+              <div class="radio" role="radiogroup" aria-label="Choose payment method">
+                <label class="radio__item">
+                  <input type="radio" name="payment" value="card" checked />
+                  <span>Card</span>
+                </label>
+
+                <!-- id on the invoice so we can rule it out if order > 80$ -->
+                <label class="radio__item">
+                  <input type="radio" id="invoiceOption" name="payment" value="invoice" />
+                  <span>Invoice</span>
+                </label>
+              </div>
+
+              <!-- Message if order is over 80$ and invoice is checked -->
+              <p id="invoiceBlockInfo" class="checkout-form__info" aria-live="polite"></p>
+
+              <div id="invoiceFields" hidden>
+                <label class="field" data-field="ssn">
+                  <span class="field__label">(YYYYMMDD-XXXX) *</span>
+                  <span class="field__error" aria-live="polite" hidden></span>
+
+                  <input class="field__input" type="text" id="ssn" name="ssn" inputmode="numeric" />
+                </label>
+              </div>
+
+              <!-------------- Card ---------------->
+              <div id="cardFields">
+                <label class="field">
+                  <span class="field__label">Card number</span>
+                  <input
+                    class="field__input"
+                    type="text"
+                    name="cardNumber"
+                    inputmode="numeric"
+                    autocomplete="cc-number"
+                  />
+                </label>
+
+                <div class="checkout-form__row">
+                  <label class="field">
+                    <span class="field__label">Expiry</span>
+                    <input
+                      class="field__input"
+                      type="text"
+                      name="cardExpiry"
+                      autocomplete="cc-exp"
+                      placeholder="MM/YY"
+                    />
+                  </label>
+
+                  <label class="field">
+                    <span class="field__label">CVC</span>
+                    <input class="field__input" type="text" name="cardCvc" inputmode="numeric" autocomplete="cc-csc" />
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+
+            <!--=========== DISCOUNT CODE =============-->
+            <fieldset>
+              <legend class="checkout-form__legend">Discount</legend>
+
+              <label class="field" data-field="discountCode">
+                <span class="field__label">Discount Code</span>
+                <span class="field__error" aria-live="polite"></span>
+
+                <input class="field__input" type="text" id="discountCode" name="discountCode" autocomplete="off" />
+              </label>
+            </fieldset>
+
+            <!--=========== CONSENTS =============-->
+            <fieldset class="checkout-form__group">
+              <legend class="checkout-form__legend">Consent</legend>
+
+              <div class="field field--check">
+                <span class="field__label">Consent *</span>
+                <span class="field__error" aria-live="polite" hidden></span>
+
+                <label class="check">
+                  <input type="checkbox" id="consent" name="consent" required />
+                  <span class="check__box" aria-hidden="true"></span>
+                  <span>I agree to personal data processing *</span>
+                </label>
+              </div>
+
+              <label class="check">
+                <!-- Default checked (important) -->
+                <input type="checkbox" id="newsletter" name="newsletter" checked />
+                <span class="check__box" aria-hidden="true"></span>
+                <span>Newsletter (yes please)</span>
+              </label>
+            </fieldset>
+
+            <div class="checkout-form__actions">
+              <!-- Disabled until everything is correct -->
+              <button type="submit" id="placeOrderBtn" class="cart-dialog__checkout" disabled>PLACE ORDER</button>
+
+              <button type="button" id="resetOrderBtn" class="cart-dialog__clear">CLEAR ORDER</button>
+              <p id="orderStatus" class="order-status" aria-live="polite"></p>
+
+              <button type="button" id="backToCartBtn" class="cart-dialog__clear">BACK</button>
+            </div>
+
+            <p id="checkoutStatus" class="checkout-form__status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <!-- Success view (shown after placing order) -->
+        <section id="successView" class="success" aria-labelledby="successTitle" hidden>
+          <header class="success__header">
+            <h2 id="successTitle" class="success__title">Order placed</h2>
+            <p class="success__subtitle">Your donuts are glazing…</p>
+          </header>
+
+          <p id="successMessage" class="success__message" aria-live="polite">Est delivery time: 30 min.</p>
+
+          <div class="success__actions">
+            <button type="button" id="newOrderBtn" class="cart-dialog__checkout">NEW ORDER</button>
+            <button type="button" class="cart-dialog__clear" data-close-dialog>CLOSE</button>
+          </div>
+        </section>
+      </div>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+@use "../abstracts/variables" as v;
+
+.product-grid {
+    display: grid;
+    gap: v.$space-6;
+    padding-top: v.$space-5;
+
+    /* Mobile first */
+    grid-template-columns: 1fr;
+}
+
+/* Tablet */
+@media (min-width: 600px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop */
+@media (min-width: 900px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

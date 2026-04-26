@@ -1,0 +1,264 @@
+@use "../abstracts/variables" as v;
+
+/* Filter button styles */
+.filter-btn {
+    border: 0;
+    border-radius: v.$radius-pill;
+    padding: 0.65rem 1rem;
+
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.35);
+    }
+}
+
+/* Reset filter button */
+.filter-btn--reset {
+    background: rgba(255, 255, 255, 0.40);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.45);
+    }
+}
+
+/* Select styles */
+.sort select {
+    border: 0;
+    border-radius: v.$radius-pill;
+    padding: 0.6rem 0.9rem;
+}
+
+/* Product card styles */
+.product-card {
+    background: v.$card;
+    border: 1px solid v.$stroke;
+    border-radius: v.$radius-lg;
+    box-shadow: v.$shadow;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.product-card__img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+}
+
+.product-card__body {
+    padding: v.$space-2;
+    display: grid;
+    text-align: center;
+    gap: v.$space-2;
+}
+
+.product-card__name {
+    font-weight: v.$fw-bold;
+    letter-spacing: 0.6px;
+}
+
+.product-card__meta {
+    display: flex;
+    justify-content: center;
+    gap: v.$space-4;
+    opacity: 0.95;
+}
+
+.product-card__title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: v.$space-3;
+}
+
+.product-card__price {
+    font-weight: v.$fw-bold;
+    opacity: 0.95;
+}
+
+/* Quantity buttons style */
+
+.qty-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: v.$radius-pill;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    cursor: pointer;
+    line-height: 0;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+    background: rgba(255, 255, 255, 0.45);
+    }
+}
+
+/* Grid for product card */
+.product-card__qty {
+    display: grid;
+    grid-template-columns: 44px 120px 44px;
+    justify-content: center;
+    align-items: center;
+    gap: v.$space-3;
+    margin-top: v.$space-2;
+}
+
+/* ADD to cart on a row below */
+.product-card__qty .buy {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: v.$space-2;
+}
+
+/* Cart styling */
+
+.cart-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ff4d6d;
+    color: #fff;
+    font-size: 0.75rem;
+    display: grid;
+    place-items: center;
+}
+
+/* Animation for cart when added products */
+.cart-btn.is-add {
+    animation: cartAdd 220ms ease;
+}
+
+@keyframes cartAdd {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+/* Input field styling */
+.amount {
+    width: 100%;
+    height: 38px;
+    text-align: center;
+
+    border-radius: v.$radius-pill;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+
+    outline: none;
+
+    &:focus {
+        background: rgba(255, 255, 255, 0.28);
+    }
+}
+
+/* Remove up and down arrow in input field */
+.amount::-webkit-outer-spin-button,
+.amount::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.amount {
+    -webkit-appearance: none;
+    appearance: textfield;
+}
+
+/* ADD-button styling */
+.buy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    height: 38px;
+    padding: 0 0.9rem;
+
+    border-radius: v.$radius-pill;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    background: rgba(255, 255, 255, 0.28);
+    color: #fff;
+
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.45);
+    }
+}
+
+.buy.is-bump .add-btn__icon {
+    animation: basketBump 240ms ease;
+}
+
+@keyframes basketBump {
+    0%   { transform: scale(1) rotate(0deg); }
+    50%  { transform: scale(1.18) rotate(-10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.add-btn__icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Wrapper. formfield - conditional classes */
+.field.is-invalid .field__input {
+    border-color: #b00020;
+}
+
+.field.is-valid .field__input {
+    border-color: #0a7a2f;
+}
+
+/* If inputfield is not correct, show error message */
+.field__error {
+    display: block;
+    min-height: 1.1em;
+    font-size: 0.9rem;
+}
+
+/* Layout if desktop */
+.checkout-form__row {
+    display: block;
+    min-height: 1.1em;
+    font-size: 0.9rem;
+}
+
+@media (min-width: 720px) {
+    .checkout-form__row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.order-status {
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.order-status.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

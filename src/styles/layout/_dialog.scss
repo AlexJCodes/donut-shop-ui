@@ -1,0 +1,798 @@
+/* src/styles/_cart-dialog.scss
+   Fullscreen <dialog> (glass) med cart + checkout (accordion).
+   Kommentarer beskriver vad som justerats / varför vissa regler finns.
+*/
+
+/* =========================
+   Dialog-tokens (scopade)
+   ========================= */
+.cart-dialog {
+  /* Byter font i dialogen utan att påverka resten av siten */
+  --dlg-font: ui-sans-serif, system-ui, -apple-system, "SF Pro Display", "Segoe UI",
+    Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+
+  /* Skapar “glass”-ytor (bakgrund + kort) */
+  --dlg-bg: rgba(255, 255, 255, 0.82);
+  --dlg-surface: rgba(255, 255, 255, 0.72);
+
+  /* Accentfärger för CTA, focus, m.m. */
+  --dlg-accent: #6f9fd6;
+  --dlg-accent-2: #79a9dd;
+
+  /* Grundfärger och tunna linjer */
+  --dlg-ink: #16161a;
+  --dlg-muted: rgba(22, 22, 26, 0.68);
+  --dlg-border: rgba(22, 22, 26, 0.12);
+
+  /* Gemensamma radier/spacing */
+  --dlg-radius: 22px;
+  --dlg-radius-sm: 14px;
+  --dlg-pad: 18px;
+  --dlg-gap: 14px;
+
+  /* A11y: konsekvent fokus-ring */
+  --dlg-focus: 0 0 0 3px rgba(111, 159, 214, 0.45);
+
+  font-family: var(--dlg-font);
+  color: var(--dlg-ink);
+}
+
+/* Säkerställer att hidden alltid gömmer element (t.ex. success view) */
+.cart-dialog [hidden] {
+  display: none !important;
+}
+
+/* =========================
+   Dialog-bas (fullscreen)
+   ========================= */
+.cart-dialog {
+  /* Gör dialogen helskärm på mobil */
+  width: 100vw;
+  height: 100svh;
+
+  /* Tar bort default “sheet” sizing */
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  /* Panelen styr visuellt utseende, dialogen själv är transparent */
+  background: transparent;
+
+  /* Låser färgschemat så inputs/buttons ser rätt ut */
+  color-scheme: light;
+}
+
+/* Mörkar + blur bakom dialogen (glass-känsla) */
+.cart-dialog::backdrop {
+  background: rgba(10, 10, 14, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+/* =========================
+   Panel / shell
+   ========================= */
+.cart-dialog__panel {
+  /* Delar upp i header + scroll-yta */
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  /* Glass-ytan */
+  background: var(--dlg-bg);
+  backdrop-filter: blur(18px);
+}
+
+/* Flyttar scroll till content-ytan under headern (för att header ska kunna vara sticky) */
+.cart-dialog__panel > :not(.cart-dialog__header) {
+  min-height: 0;
+  overflow: auto;
+
+  /* Samma padding/spacing mellan sektioner */
+  padding: var(--dlg-pad);
+  display: grid;
+  gap: var(--dlg-gap);
+}
+
+/* =========================
+   Header (sticky)
+   ========================= */
+.cart-dialog__header {
+  /* Låser headern så titel/close alltid syns */
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  /* Skapar “top sheet”-känsla med gradient + blur */
+  padding: calc(var(--dlg-pad) + 2px) var(--dlg-pad) var(--dlg-pad);
+  border-bottom: 1px solid var(--dlg-border);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.92),
+    rgba(255, 255, 255, 0.72)
+  );
+  backdrop-filter: blur(14px);
+
+  /* Placerar titel till vänster och X till höger */
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+
+/* Typografi för titel/subtitel */
+.cart-dialog__title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cart-dialog__subtitle {
+  margin: 6px 0 0;
+  grid-column: 1 / 2;
+  font-size: 13px;
+  line-height: 1.3;
+  color: var(--dlg-muted);
+}
+
+/* X-knapp: rund, diskret, tydlig fokus */
+.cart-dialog__close {
+  grid-column: 2 / 3;
+  justify-self: end;
+
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--dlg-border);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--dlg-ink);
+
+  display: inline-grid;
+  place-items: center;
+
+  cursor: pointer;
+}
+
+.cart-dialog__close:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.cart-dialog__close:active {
+  transform: translateY(1px);
+}
+
+/* =========================
+   Cart view (summary + items + footer)
+   ========================= */
+#cartView {
+  display: grid;
+  gap: var(--dlg-gap);
+  min-height: 0;
+}
+
+/* Summary “card” */
+.cart-dialog__summary {
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: var(--dlg-surface);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+/* Summary rader: label vänster, värde höger */
+.cart-dialog__summary p {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 13px;
+  color: var(--dlg-muted);
+}
+
+.cart-dialog__summary strong {
+  font-weight: 650;
+  color: var(--dlg-ink);
+}
+
+/* Total-raden: separeras med top border */
+.cart-dialog__total {
+  margin-top: 2px;
+  padding-top: 10px;
+  border-top: 1px solid var(--dlg-border);
+}
+
+.cart-dialog__total strong {
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+
+/* Info-texter: små och diskreta */
+.cart-dialog__info {
+  display: block;
+  margin-top: -2px;
+  font-size: 12px;
+  line-height: 1.25;
+  color: var(--dlg-muted);
+}
+
+/* JS-hook: liten “pulse” när totalen uppdateras */
+#cartTotal {
+  display: inline-block;
+  transform-origin: right center;
+  transition: transform 180ms ease, color 180ms ease;
+}
+
+#cartTotal.is-updating {
+  transform: scale(1.06);
+  color: var(--dlg-accent);
+}
+
+/* Cart-listan: egen scroll (så dialogen inte blir onödigt lång) */
+.cart-dialog__list {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+  -webkit-overflow-scrolling: touch;
+
+  display: grid;
+  gap: 12px;
+}
+
+/* Bas-stil för item-kort */
+.cart-dialog__list > * {
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 12px;
+}
+
+/* Footer: låser bort sticky/overlay så knappar inte lägger sig över innehåll */
+.cart-dialog__footer {
+  position: static !important;
+  inset: auto !important;
+  z-index: auto !important;
+
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* =========================
+   Checkout view (accordion)
+   ========================= */
+
+/* Lägger checkout i egen “card” och separerar från cart */
+#checkoutView {
+  margin-top: 14px;
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+}
+
+/* Checkout-header syns alltid (även när form är kollapsad) */
+#checkoutView .checkout__header {
+  border: 0;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 14px;
+  border-bottom: 1px solid var(--dlg-border);
+}
+
+.checkout__title {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.checkout__subtitle {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--dlg-muted);
+}
+
+/* Checkout: default COLLAPSED (styrs av .is-checkout-open på <dialog>) */
+.cart-dialog #checkoutForm {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 14px;
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Checkout: OPEN när dialogen har state-klassen */
+.cart-dialog.is-checkout-open #checkoutForm {
+  max-height: 70vh;
+  overflow: auto;
+  padding: 14px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: max-height 260ms ease, opacity 200ms ease, transform 200ms ease, padding 200ms ease;
+}
+
+/* Fieldsets: enhetliga “cards” i checkout */
+.checkout-form__group,
+.checkout-form fieldset {
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  margin: 0;
+}
+
+.checkout-form__legend {
+  padding: 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dlg-muted);
+}
+
+/* Inputs: samma höjd, samma radie, tydlig fokus */
+.field {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.field:first-child {
+  margin-top: 0;
+}
+
+.field__label {
+  font-size: 12.5px;
+  color: var(--dlg-muted);
+}
+
+.field__input {
+  width: 100%;
+  height: 44px;
+
+  border: 1px solid var(--dlg-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--dlg-ink);
+
+  padding: 10px 12px;
+  outline: none;
+
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.field__input:focus {
+  border-color: rgba(111, 159, 214, 0.65);
+  box-shadow: var(--dlg-focus);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Felmeddelanden: tydligt men inte skrikigt */
+.field__error {
+  font-size: 12px;
+  line-height: 1.25;
+  color: #b00020;
+}
+
+/* Två kolumner (t.ex. postal/city, expiry/cvc) */
+.checkout-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Payment radios: “cards” med bra hit-area */
+.radio {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.radio__item {
+  border: 1px solid var(--dlg-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 12px;
+
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.radio__item input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--dlg-accent);
+}
+
+/* Checkboxes: Native (A) – vi gömmer check__box och låter browser rita checkmark */
+.check {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.check__box {
+  display: none !important;
+}
+
+.check input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--dlg-accent);
+}
+
+.check span:last-child {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--dlg-ink);
+}
+
+/* A11y: fokus på checkbox (tangentbord) */
+.check input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: var(--dlg-focus);
+  border-radius: 6px;
+}
+
+/* Actions: ska inte bli sticky i accordion */
+.checkout-form__actions {
+  position: static;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  backdrop-filter: none;
+  display: grid;
+  gap: 10px;
+}
+
+/* =========================
+   Buttons (CTA + secondary)
+   ========================= */
+.cart-dialog__checkout,
+.cart-dialog__clear {
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--dlg-border);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.cart-dialog__checkout {
+  background: linear-gradient(180deg, var(--dlg-accent-2), var(--dlg-accent));
+  border-color: rgba(111, 159, 214, 0.6);
+  color: #081018;
+}
+
+.cart-dialog__checkout:hover {
+  filter: saturate(1.06);
+}
+
+.cart-dialog__checkout:active {
+  transform: translateY(1px);
+}
+
+.cart-dialog__checkout:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}
+
+.cart-dialog__clear {
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--dlg-ink);
+}
+
+.cart-dialog__clear:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.cart-dialog__clear:active {
+  transform: translateY(1px);
+}
+
+/* =========================
+   Success view
+   ========================= */
+#successView {
+  /* Återanvänder parent padding – håller layout konsekvent */
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.success__header {
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: var(--dlg-surface);
+  padding: 14px;
+}
+
+.success__title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.success__subtitle {
+  margin: 6px 0 0;
+  color: var(--dlg-muted);
+  font-size: 13px;
+}
+
+.success__message {
+  margin: 0;
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 14px;
+  font-size: 13px;
+  color: var(--dlg-ink);
+}
+
+.success__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* =========================
+   A11y: focus-visible
+   ========================= */
+.cart-dialog :focus {
+  outline: none;
+}
+
+.cart-dialog :focus-visible {
+  box-shadow: var(--dlg-focus);
+  border-color: rgba(111, 159, 214, 0.65);
+}
+
+/* =========================
+   Cart item (cart-row) polish
+   ========================= */
+
+/* Tar över layouten för en cart-row (title/price/meta/qty/trash) */
+.cart-row {
+  border: 1px solid var(--dlg-border);
+  border-radius: var(--dlg-radius);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 14px;
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title  price"
+    "meta   meta"
+    "qty    trash";
+  gap: 10px 12px;
+  align-items: start;
+}
+
+.cart-row__name {
+  grid-area: title;
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--dlg-ink);
+}
+
+.cart-row__bulk {
+  grid-area: meta;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.25;
+  color: var(--dlg-muted);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cart-row__sum {
+  grid-area: price;
+  justify-self: end;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  color: var(--dlg-ink);
+}
+
+/* Trash-knapp: rund ikon + tydlig fokus */
+.cart-row__delete {
+  grid-area: trash;
+  justify-self: end;
+  align-self: center;
+
+  width: 44px;
+  height: 44px;
+  padding: 0;
+
+  border-radius: 999px;
+  border: 1px solid var(--dlg-border);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--dlg-ink);
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.cart-row__delete:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.cart-row__delete:active {
+  transform: translateY(1px);
+}
+
+.cart-row__delete:focus-visible {
+  box-shadow: var(--dlg-focus);
+  border-color: rgba(111, 159, 214, 0.65);
+}
+
+.trash-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  pointer-events: none;
+}
+
+/* Stepper: pill med +/- och siffra i mitten */
+.cart-row__qty {
+  grid-area: qty;
+  align-self: center;
+
+  display: grid;
+  grid-template-columns: 44px minmax(44px, 1fr) 44px;
+  align-items: center;
+
+  border: 1px solid var(--dlg-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  padding: 4px;
+
+  max-width: 240px;
+}
+
+.cart-row__qty button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--dlg-ink);
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease;
+}
+
+.cart-row__qty button:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.cart-row__qty button:active {
+  transform: translateY(1px);
+}
+
+.cart-row__qty button:focus-visible {
+  box-shadow: var(--dlg-focus);
+}
+
+.cart-row__amount {
+  text-align: center;
+  font-weight: 750;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--dlg-ink);
+}
+
+/* Mobil: stackar så det inte blir trångt */
+@media (max-width: 420px) {
+  .cart-row {
+    grid-template-areas:
+      "title title"
+      "meta  meta"
+      "qty   price"
+      "trash trash";
+  }
+
+  .cart-row__sum {
+    align-self: center;
+  }
+
+  .cart-row__delete {
+    justify-self: stretch;
+    width: 100%;
+    border-radius: 14px;
+  }
+}
+
+/* =========================
+   11) Reduced motion
+   ========================= */
+@media (prefers-reduced-motion: reduce) {
+  /* Stänger av transitions för användare som vill minska rörelse */
+  .cart-dialog * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================
+   12) Desktop polish
+   ========================= */
+@media (min-width: 768px) {
+  /* Gör dialogen till en centrerad “sheet” på desktop */
+  .cart-dialog__panel {
+    width: min(860px, 92vw);
+    height: min(860px, 92vh);
+    margin: 4vh auto;
+    border-radius: var(--dlg-radius);
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+  }
+}
+
+/* cartView */
+#cartView {
+  display: grid;
+  grid-template-rows: auto minmax(120px, 1fr) auto; /* summary | list | footer */
+  gap: var(--dlg-gap);
+  min-height: 0;
+}
+
+/* Cart-list maxhöjd */
+.cart-dialog__list {
+  min-height: 0;
+  max-height: clamp(160px, 32vh, 340px);
+  overflow: auto;
+}
+
+/* Checkout under cart*/
+#checkoutView {
+  margin-top: 0; 
+}
+
+/* checkout öppen: begränsa formens höjd */
+.cart-dialog.is-checkout-open #checkoutForm {
+  max-height: clamp(220px, 36vh, 420px);
+  overflow: auto;
+}
+
+/* Desktop: mer plats till cart-listan, men fortfarande stackat */
+@media (min-width: 768px) {
+  .cart-dialog__list {
+    max-height: clamp(220px, 40vh, 520px);
+  }
+
+  .cart-dialog.is-checkout-open #checkoutForm {
+    max-height: clamp(260px, 38vh, 520px);
+  }
+}

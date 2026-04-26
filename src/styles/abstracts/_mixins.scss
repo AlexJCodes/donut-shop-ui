@@ -1,0 +1,20 @@
+@mixin wave-bottom($color) {
+    position: relative;
+
+&::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;  
+  bottom: -1px;
+  height: 64px;
+  background: $color;
+  clip-path: path("M0,32 C120,64 240,0 360,32 C480,64 600,0 720,32 C840,64 960,0 1080,32 C1200,64 1320,0 1440,32 L1440,64 L0,64 Z");
+    }
+}
+
+@mixin section-padding {
+    padding: 4.5rem 0;
+}
+
